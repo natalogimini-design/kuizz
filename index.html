@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What do you know about me? <menu></menu>? ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f172a,#1e293b,#312e81);
+    overflow:hidden;
+    color:white;
+}
+
+.hearts{
+    position:fixed;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+
+.heart{
+    position:absolute;
+    color:#ff4d6d;
+    animation:float 8s linear infinite;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(100vh);
+        opacity:0;
+    }
+    20%{
+        opacity:1;
+    }
+    100%{
+        transform:translateY(-120px);
+        opacity:0;
+    }
+}
+
+.container{
+    width:90%;
+    max-width:700px;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.1);
+    padding:35px;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(255,255,255,.1);
+}
+
+h1{
+    margin-bottom:15px;
+}
+
+.subtitle{
+    color:#cbd5e1;
+    line-height:1.7;
+    margin-bottom:25px;
+}
+
+.question{
+    font-size:1.3rem;
+    margin-bottom:20px;
+}
+
+.option{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.1);
+    padding:15px;
+    border-radius:15px;
+    margin:10px 0;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.option:hover{
+    background:#6366f1;
+    transform:translateY(-3px);
+}
+
+.hidden{
+    display:none;
+}
+
+.btn{
+    border:none;
+    padding:14px 25px;
+    border-radius:15px;
+    background:#ec4899;
+    color:white;
+    cursor:pointer;
+    font-size:1rem;
+}
+
+.btn:hover{
+    transform:scale(1.05);
+}
+
+.score{
+    font-size:2rem;
+    color:#f472b6;
+    margin:15px 0;
+}
+
+.message{
+    font-size:1.1rem;
+    line-height:1.8;
+}
+</style>
+</head>
+<body>
+
+<!-- GANTI NAMA FILE MP3 -->
+<audio id="music" loop>
+    <source src="shape_of_my_heart.mp3" type="audio/mpeg">
+</audio>
+
+<div class="hearts" id="hearts"></div>
+
+<div class="container">
+
+    <!-- HALAMAN AWAL -->
+    <div id="start">
+
+<h1>🤍 What Do You Know About Me?</h1>
+
+<p class="subtitle">
+Hai.<br><br>
+
+Aku cuma penasaran,
+
+seberapa jauh kamu benar-benar mengenalku.
+
+Ada beberapa hal yang mungkin sudah kamu tahu,
+dan beberapa yang mungkin belum.
+
+Selamat mencoba. ✨</p>
+        <button class="btn" onclick="startQuiz()">
+            Mulai ✨
+        </button>
+
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quiz" class="hidden">
+
+        <div class="question" id="question"></div>
+
+        <div id="options"></div>
+
+    </div>
+
+    <!-- HASIL -->
+    <div id="result" class="hidden">
+
+<h1>🤖 Analysis Result</h1>
+
+        <div class="score" id="score"></div>
+
+        <div class="message" id="message"></div>
+        <div id="answerKey" style="
+margin-top:25px;
+text-align:left;
+background:rgba(255,255,255,.05);
+padding:15px;
+border-radius:15px;
+display:none;
+"></div>
+
+        <br>
+
+<button class="btn" onclick="location.reload()">
+    Try Again ✨
+</button>
+
+    </div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+question:"🌸 Bunga favoritku apa?",
+options:[
+{text:"Mawar",correct:false},
+{text:"Tulip",correct:false},
+{text:"Lily",correct:true},
+{text:"Matahari",correct:false}
+]
+},
+
+{
+question:"🎨 Warna favoritku?",
+options:[
+{text:"Hitam",correct:true},
+{text:"Navy",correct:false},
+{text:"Putih",correct:false},
+{text:"pink",correct:false}
+]
+},
+
+{
+question:"🏝️ Tempat favoritku?",
+options:[
+{text:"Pantai",correct:true},
+{text:"Bioskop",correct:false},
+{text:"Caffe",correct:false},
+{text:"Danau",correct:false}
+]
+},
+
+{
+question:"🎵 Aku lebih sering mendengarkan musik saat?",
+options:[
+{text:"Belajar",correct:false},
+{text:"tergantung mood",correct:true},
+{text:"Olahraga",correct:false},
+{text:"tidur",correct:false}
+]
+},
+
+{
+question:"🌙 Aku lebih suka?",
+options:[
+{text:"Pagi Hari",correct:false},
+{text:"Siang Hari",correct:false},
+{text:"Malam Hari",correct:true},
+{text:"Sore Hari",correct:false}
+]
+},
+
+{
+question:"📱 Yang paling sering aku lakukan saat gabut?",
+options:[
+{text:"Membaca Novel",correct:true},
+{text:"Olahraga",correct:false},
+{text:"Tidur",correct:false},
+{text:"Main Game",correct:false}
+]
+},
+
+{
+question:"🐱 Aku lebih suka?",
+options:[
+{text:"kucing",correct:false},
+{text:"kelinci",correct:true},
+{text:"hamster",correct:false},
+{text:"Burung",correct:false}
+]
+},
+
+{
+question:"🎬 Genre film favoritku?",
+options:[
+{text:"Action",correct:true},
+{text:"Horor",correct:false},
+{text:"Komedi",correct:false},
+{text:"Romantis",correct:false}
+]
+},
+
+{
+question:"🎵 Genre musik yang paling aku suka?",
+options:[
+{text:"Dangdut",correct:false},
+{text:"Jazz",correct:false},
+{text:"K-Pop",correct:true},
+{text:"Rock",correct:false}
+]
+},
+
+{
+question:"🎤 Aku lebih sering mengikuti?",
+options:[
+{text:"Idol K-Pop",correct:true},
+{text:"JKT48",correct:false},
+{text:"Band Metal",correct:false},
+{text:"Penyanyi lokal",correct:false}
+]
+},
+
+{
+question:"🎌 Salah satu hiburan favoritku adalah?",
+options:[
+{text:"Membuat proggram",correct:true},
+{text:"Badminton",correct:false},
+{text:"Memancing",correct:false},
+{text:"Golf",correct:false}
+]
+},
+
+{
+question:"📺 Selain anime, aku juga suka?",
+options:[
+{text:"Sinetron",correct:false},
+{text:"Film Dokumenter",correct:false},
+{text:"Drama Korea",correct:true},
+{text:"Reality Show Memasak",correct:false}
+]
+},
+
+{
+question:"✨ Kalau disuruh memilih, aku lebih suka?",
+options:[
+{text:"Bangun pagi untuk jogging",correct:false},
+{text:"Memancing seharian",correct:false},
+{text:"Belanja di mall",correct:false},
+{text:"kulineran",correct:true}
+]
+},
+
+{
+question:"🎭 Aku tipe orang yang?",
+options:[
+{text:"Fokus satu bidang saja",correct:false},
+{text:"All Rounder",correct:true},
+{text:"Tidak punya hobi",correct:false},
+{text:"Tidak suka mencoba hal baru",correct:false}
+]
+},
+
+{
+question:"🎮 Saat senggang aku lebih memilih?",
+options:[
+{text:"Tidur seharian",correct:false},
+{text:"Bersih-bersih rumah",correct:false},
+{text:"Menikmati hobi dan hal yang kusuka",correct:true},
+{text:"Olahraga berat",correct:false}
+]
+},
+
+{
+question:"💭 Aku lebih tertarik pada?",
+options:[
+{text:"Banyak hal sekaligus",correct:true},
+{text:"Satu topik saja",correct:false},
+{text:"Tidak tertarik apa pun",correct:false},
+{text:"Hanya olahraga",correct:false}
+]
+},
+
+{
+question:"❤️ Hal yang paling menggambarkanku?",
+options:[
+{text:"Penasaran, suka belajar banyak hal, dan punya banyak minat",correct:true},
+{text:"Pemalas dan tidak punya hobi",correct:false},
+{text:"Anti hiburan",correct:false},
+{text:"Tidak suka musik atau film",correct:false}
+]
+},
+
+{
+question:"♉ Tebak, apa zodiakku?",
+options:[
+{text:"Aries",correct:false},
+{text:"Gemini",correct:false},
+{text:"Taurus",correct:true},
+{text:"Leo",correct:false}
+]
+},
+
+{
+question:"🧠 Kalau kamu memperhatikanku, MBTI-ku yang benar adalah?",
+options:[
+{text:"ISTJ",correct:true},
+{text:"ESFP",correct:false},
+{text:"ISFJ",correct:false},
+{text:"ENFP",correct:false}
+]
+},
+
+{
+question:"💭 Aku lebih terlihat seperti orang yang?",
+options:[
+{text:"Spontan tanpa rencana",correct:false},
+{text:"Suka menganalisis dan berpikir jauh ke depan",correct:true},
+{text:"Selalu jadi pusat perhatian",correct:false},
+{text:"Mudah ikut arus",correct:false}
+]
+},
+
+{
+question:"📋 Yang paling menggambarkan kepribadianku?",
+options:[
+{text:"Teratur, realistis, dan bertanggung jawab",correct:true},
+{text:"Sangat spontan dan suka mengambil risiko",correct:false},
+{text:"Selalu mengikuti perasaan",correct:false},
+{text:"Suka menjadi pusat perhatian",correct:false}
+]
+},
+
+
+{
+question:"📌 Yang paling mendekati kepribadianku?",
+options:[
+{text:"Selalu bergantung pada orang lain",correct:false},
+{text:"Mandiri dan punya banyak minat",correct:true},
+{text:"Tidak suka mencoba hal baru",correct:false},
+{text:"Tidak punya tujuan",correct:false}
+]
+},
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function startQuiz(){
+
+    document.getElementById("music")
+    .play()
+    .catch(()=>{});
+
+    document.getElementById("start")
+    .classList.add("hidden");
+
+    document.getElementById("quiz")
+    .classList.remove("hidden");
+
+    showQuestion();
+}
+
+function showQuestion(){
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("question")
+    .innerText = q.question;
+
+    const options =
+    document.getElementById("options");
+
+    options.innerHTML = "";
+
+    q.options.forEach(option => {
+
+        const div =
+        document.createElement("div");
+
+        div.classList.add("option");
+
+        div.innerText = option.text;
+
+div.onclick = () =>
+checkAnswer(option.correct);
+
+        options.appendChild(div);
+
+    });
+}
+
+function checkAnswer(correct){
+
+    if(correct){
+        score++;
+    }
+
+    currentQuestion++;
+
+    if(currentQuestion < questions.length){
+        showQuestion();
+    }else{
+        showResult();
+    }
+}
+
+function showResult(){
+
+    document.getElementById("quiz")
+    .classList.add("hidden");
+
+    document.getElementById("result")
+    .classList.remove("hidden");
+
+    document.getElementById("score")
+    .innerHTML = "Accuracy: " + score + " / " + questions.length;
+
+    let text = "";
+
+    if(score >= 12){
+
+        text = `
+        🤖<br><br>
+
+        Analysis Complete.
+
+        Berdasarkan jawaban yang diberikan,
+        sistem mendeteksi bahwa kamu mengenal pemilik kuis ini dengan cukup baik.
+
+        Beberapa detail yang berhasil kamu jawab bukan hanya informasi umum,
+        melainkan hal-hal kecil yang biasanya hanya diperhatikan oleh orang tertentu.
+
+        Tidak semua jawaban harus sempurna untuk menunjukkan kedekatan.
+
+        Terkadang, mengingat hal-hal sederhana tentang seseorang
+        sudah lebih dari cukup.
+
+        Terima kasih telah mengikuti analisis ini sampai selesai. ✨
+        `;
+    }
+
+    else if(score >= 8){
+
+        text = `
+        🤖<br><br>
+
+        Analysis Complete.
+
+        Hasil menunjukkan bahwa kamu sudah mengenal pemilik kuis ini
+        dalam tingkat yang cukup baik.
+
+        Beberapa jawaban berhasil ditebak dengan tepat,
+        sementara beberapa lainnya masih belum sesuai.
+
+        Kesimpulan sementara:
+
+        Kamu mengenalnya,
+        tetapi masih ada beberapa bagian cerita yang belum terbaca sepenuhnya.
+
+        Mungkin masih ada banyak hal menarik yang belum sempat kamu ketahui. 🌙
+        `;
+    }
+
+    else{
+
+        text = `
+        🤖<br><br>
+
+        Analysis Complete.
+
+        Sistem menemukan bahwa masih banyak informasi mengenai pemilik kuis ini
+        yang belum kamu ketahui.
+
+        Namun hasil ini bukanlah sesuatu yang buruk.
+
+        Mengenal seseorang bukan tentang mendapatkan skor sempurna,
+        melainkan tentang waktu, pengalaman,
+        dan momen-momen kecil yang dibagikan bersama.
+
+        Bisa jadi saat ini kamu belum mengenalnya terlalu jauh.
+
+        Atau mungkin,
+        masih banyak cerita yang belum sempat dibagikan.
+
+        Terima kasih telah menyelesaikan seluruh pertanyaan. ☁️
+        `;
+    }
+
+    document.getElementById("message")
+    .innerHTML = text;
+
+    let answerHTML = `
+    <h3 style="margin-bottom:15px;">📝 Answer Key</h3>
+    `;
+
+    questions.forEach((q,index)=>{
+
+        const correctAnswer =
+        q.options.find(opt => opt.correct);
+
+        answerHTML += `
+        <p style="margin-bottom:10px;">
+        <strong>${index+1}. ${q.question}</strong><br>
+        ✅ ${correctAnswer.text}
+        </p>
+        `;
+    });
+
+    document.getElementById("answerKey").innerHTML =
+    answerHTML;
+
+    document.getElementById("answerKey").style.display =
+    "block";
+}
+setInterval(createHeart,500);
+
+</script>
+
+</body>
+</html>
